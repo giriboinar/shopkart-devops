@@ -1,0 +1,30 @@
+# ShopKart CI: test -> build -> Trivy scan. Runs on GitHub Actions.
+# No registry push and no secrets are required for this workflow.
+name: shopkart-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: pytest -q
+  build-and-scan:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t shopkart-api:${{ github.sha }} .
+      - uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: shopkart-api:${{ github.sha }}
+          format: table
+          exit-code: "0"
