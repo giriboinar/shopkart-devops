@@ -1,0 +1,20 @@
+# Argo CD Application (GitOps). Replace REPO_URL with the real repository
+# URL after the repo is created; the path below must match this tree.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shopkart
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/giriboinar/shopkart-devops.git
+    targetRevision: HEAD
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: shopkart
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
