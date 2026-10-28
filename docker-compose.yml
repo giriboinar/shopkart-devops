@@ -1,0 +1,20 @@
+# Local simulation stack: API + Prometheus + Grafana.
+# No cloud, no real traffic — for local demos only.
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    image: grafana/grafana:11.2.2
+    ports:
+      - "3000:3000"
+    environment:
+    volumes:
+      - ./monitoring/grafana-dashboard.json:/var/lib/grafana/dashboards/shopkart.json:ro
