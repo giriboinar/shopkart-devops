@@ -1,0 +1,21 @@
+# HPA used by the 5x spike simulation: extra replicas appear under load,
+# then scale back down. This is a local demo, not a production event.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: shopkart-api
+  namespace: shopkart
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: shopkart-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopkart-api
+  namespace: shopkart
+spec:
+  selector:
+    app: shopkart-api
+  ports:
+    - port: 80
+      targetPort: 8000

@@ -1,0 +1,20 @@
+# Optional: only works if an ingress controller (e.g. NGINX) is installed.
+# For the basic local demo you can skip this and use port-forward instead.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shopkart-api
+  namespace: shopkart
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: shopkart.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: shopkart-api
+                port:
+                  number: 80
