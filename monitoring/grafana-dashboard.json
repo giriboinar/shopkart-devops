@@ -1,0 +1,19 @@
+{
+  "title": "ShopKart Checkout SLO (simulation)",
+  "tags": ["shopkart", "simulation"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Checkout success rate (30d) vs 99.9% SLO target",
+      "type": "stat",
+      "targets": [{ "expr": "job:checkout_success_rate_30d" }],
+      "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "steps": [{ "value": 0.999 }] } } }
+    },
+    {
+      "title": "Checkout request rate",
+      "type": "timeseries",
+      "targets": [{ "expr": "rate(checkout_requests_total[5m])" }]
+    }
+  ],
+  "note": "Simulation dashboard: panels show local demo data from the API /metrics endpoint. The 99.9% line is a target, not a measured production SLO."
+}

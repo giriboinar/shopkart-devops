@@ -1,0 +1,26 @@
+# Checkout SLO: 99.9% successful checkouts over 30 days (SIMULATION).
+# These are the SLO definition + alerting rules. The 99.9% figure is a
+# TARGET defined here, not a measured production result — there is no
+# production traffic in this project. Rules only fire once /metrics
+# exists locally via the API /metrics endpoint; the SLO value itself remains a target, not a production measurement.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: shopkart-slo
+  namespace: shopkart
+spec:
+  groups:
+    - name: shopkart.checkout-slo
+      rules:
+        - record: job:checkout_success_rate_30d
+          expr: |
+            sum(rate(checkout_requests_total{status="success"}[30d]))
+            /
+            sum(rate(checkout_requests_total[30d]))
+        - alert: CheckoutSLOBurning
+          expr: job:checkout_success_rate_30d < 0.999
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Checkout success rate below the 99.9% SLO target (simulation)"

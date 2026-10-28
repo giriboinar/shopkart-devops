@@ -1,0 +1,16 @@
+# ServiceMonitor for a Prometheus Operator install on Kubernetes.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: shopkart-api
+  namespace: shopkart
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: shopkart-api
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
