@@ -19,13 +19,13 @@ is written in Terraform but **not applied** (see below).
 
 ```mermaid
 flowchart LR
-    Dev[Developer] -->|git push| GH[GitHub Actions CI\npytest + Docker build + Trivy]
-    GH -->|image| Reg[Container image\n(local / registry)]
-    Reg -->|Argo CD syncs k8s/| K8s[Kubernetes\nShopKart API + HPA]
+    Dev[Developer] -->|git push| GH["GitHub Actions CI<br/>pytest + Docker build + Trivy"]
+    GH -->|image| Reg["Container image<br/>(local / registry)"]
+    Reg -->|Argo CD syncs k8s/| K8s["Kubernetes<br/>ShopKart API + HPA"]
     K8s -->|canary / blue-green| RO[Argo Rollouts]
-    K8s -->|/metrics| Prom[Prometheus\nSLO rules + alerts]
-    Prom --> Graf[Grafana dashboard\n99.9% SLO target]
-    TF[Terraform\nVPC + EKS, 3 AZs] -.->|defined, NOT applied| AWS[AWS — not provisioned]
+    K8s -->|/metrics| Prom["Prometheus<br/>SLO rules + alerts"]
+    Prom --> Graf["Grafana dashboard<br/>99.9% SLO target"]
+    TF["Terraform<br/>VPC + EKS, 3 AZs"] -.->|defined, NOT applied| AWS["AWS — not provisioned"]
 ```
 
 ## What each tool does, and why
