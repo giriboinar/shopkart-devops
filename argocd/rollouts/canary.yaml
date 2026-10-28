@@ -1,0 +1,35 @@
+# Argo Rollouts CANARY example (simulation) — the demo used for the
+# "payments issue contained to 10% of traffic" story. See canary-demo.md:
+# a deliberately bad image is sent to 10% of traffic, observed, then
+# rolled back before it reaches 100%. This is a local demo, NOT a real
+# incident and NOT real payment traffic.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: shopkart-canary
+  namespace: shopkart
+spec:
+  replicas: 4
+  strategy:
+    canary:
+      steps:
+        - setWeight: 10
+        - pause: {}
+        - setWeight: 50
+        - pause: {}
+        - setWeight: 100
+      canaryService: shopkart-api-canary
+      stableService: shopkart-api
+  selector:
+    matchLabels:
+      app: shopkart-api
+  template:
+    metadata:
+      labels:
+        app: shopkart-api
+    spec:
+      containers:
+        - name: api
+          image: shopkart-api:latest
+          ports:
+            - containerPort: 8000

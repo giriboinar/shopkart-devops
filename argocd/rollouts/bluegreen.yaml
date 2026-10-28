@@ -1,0 +1,27 @@
+# Argo Rollouts BLUE-GREEN example (simulation).
+# New version runs fully alongside the old one, then traffic flips at once.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: shopkart-bluegreen
+  namespace: shopkart
+spec:
+  replicas: 2
+  strategy:
+    blueGreen:
+      activeService: shopkart-api
+      previewService: shopkart-api-preview
+      autoPromotionEnabled: false  # promote manually: kubectl argo rollouts promote
+  selector:
+    matchLabels:
+      app: shopkart-api
+  template:
+    metadata:
+      labels:
+        app: shopkart-api
+    spec:
+      containers:
+        - name: api
+          image: shopkart-api:latest
+          ports:
+            - containerPort: 8000
